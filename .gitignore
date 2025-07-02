@@ -1,0 +1,29 @@
+# .gitignore (최상위 폴더: my-account-book/)
+
+# Node modules
+node_modules/
+
+# dotenv environment variables
+.env
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS generated files
+.DS_Store
+.vscode/ # VS Code 설정 파일 (선택 사항, 팀 프로젝트에서는 공유할 수도 있음)
+
+# IDE and editor files
+.idea/
+*.iml
+.project
+.classpath
+.settings/
+.vs/
+
+# Build artifacts
+dist/
+build/
