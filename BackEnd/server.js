@@ -1,5 +1,5 @@
-// backend/server.js
-require("dotenv").config(); // .env 파일 로드
+// backend/server.js (Update this file)
+require("dotenv").config(); // Load environment variables from .env file
 
 const express = require("express");
 const mongoose = require("mongoose");
@@ -9,28 +9,40 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGODB_URI;
 
-// --- 미들웨어 설정 ---
-app.use(cors()); // CORS 허용 (프론트엔드와 통신 위함)
-app.use(express.json()); // JSON 요청 본문 파싱
+// --- Middleware Setup ---
+app.use(cors());
+app.use(express.json());
 
-// --- MongoDB 연결 ---
+// --- MongoDB Connection ---
 mongoose
   .connect(MONGODB_URI)
   .then(() => console.log("MongoDB connected successfully!"))
   .catch((err) => {
     console.error("MongoDB connection error:", err);
-    process.exit(1); // 연결 실패 시 앱 종료
+    process.exit(1);
   });
 
-// --- 라우트 정의 (나중에 추가) ---
+// --- Route Definitions ---
+// Import route modules
 const transactionRoutes = require("./routes/transactionRoutes");
-app.use("/api/transactions", transactionRoutes); // /api/transactions 경로로 라우트 연결
+const categoryRoutes = require("./routes/categoryRoutes");
+const authRoutes = require("./routes/authRoutes"); // Import auth routes
+const { protect } = require("./middleware/auth"); // Import the protect middleware
 
+// Connect route modules to specific API endpoints
+app.use("/api/auth", authRoutes); // Authentication routes (e.g., /api/auth/register, /api/auth/login)
+
+// Apply 'protect' middleware to transaction and category routes
+// This means these routes will now require a valid JWT to access
+app.use("/api/transactions", protect, transactionRoutes);
+app.use("/api/categories", protect, categoryRoutes);
+
+// Basic route for root URL
 app.get("/", (req, res) => {
   res.send("Account Book API is running!");
 });
 
-// --- 서버 시작 ---
+// --- Server Start ---
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

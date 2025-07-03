@@ -1,39 +1,42 @@
+// backend/models/Transaction.js
 const mongoose = require("mongoose");
 
 const transactionSchema = new mongoose.Schema(
   {
     userId: {
+      // User ID for the associated user
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // User 모델을 참조
+      ref: "User", // Reference to the 'User' model
       required: true,
-      index: true, // 사용자별 쿼리 성능 향상을 위해 인덱싱
+      index: true, // Index for improved query performance by user
     },
     type: {
       type: String,
-      enum: ["income", "expense"],
+      enum: ["income", "expense"], // Type of transaction: income or expense
       required: true,
     },
     amount: {
       type: Number,
       required: true,
-      min: 0,
+      min: 0, // Amount must be non-negative
     },
     category: {
+      // Category ID for the associated category
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Category", // Category 모델을 참조
+      ref: "Category", // Reference to the 'Category' model
       required: true,
-      index: true, // 카테고리별 쿼리 성능 향상을 위해 인덱싱
+      index: true, // Index for improved query performance by category
     },
     description: {
       type: String,
       trim: true,
-      default: "",
+      default: "", // Default value
     },
     date: {
       type: Date,
       required: true,
-      default: Date.now,
-      index: true, // 날짜별 쿼리 (기간 조회) 성능 향상을 위해 인덱싱
+      default: Date.now, // Default to current date if not provided
+      index: true, // Index for improved query performance by date (e.g., date range queries)
     },
     paymentMethod: {
       type: String,
@@ -47,11 +50,11 @@ const transactionSchema = new mongoose.Schema(
     },
     isRecurring: {
       type: Boolean,
-      default: false,
+      default: false, // Indicates if it's a recurring transaction
     },
   },
   {
-    timestamps: true,
+    timestamps: true, // Automatically adds createdAt and updatedAt fields
   }
 );
 

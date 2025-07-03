@@ -1,3 +1,4 @@
+// backend/models/Category.js
 const mongoose = require("mongoose");
 
 const categorySchema = new mongoose.Schema(
@@ -6,12 +7,12 @@ const categorySchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+      index: true, // Index for performance when querying by user
     },
     name: {
       type: String,
       required: true,
       trim: true,
-      // unique: true // userId별로 고유해야 함. 복합 인덱스로 설정
     },
     type: {
       type: String,
@@ -32,7 +33,8 @@ const categorySchema = new mongoose.Schema(
   }
 );
 
-// userId와 name이 함께 고유해야 함 (같은 사용자 내에서 카테고리 이름 중복 방지)
+// Ensures that 'name' is unique per 'userId'
+// A user cannot have two categories with the same name (e.g., two 'Food' categories)
 categorySchema.index({ userId: 1, name: 1 }, { unique: true });
 
 module.exports = mongoose.model("Category", categorySchema);
